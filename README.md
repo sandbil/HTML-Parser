@@ -52,14 +52,14 @@ This tested with version Delphi XE5,6
    And joy!!!
    
    Xpath  support:
-   attributes     - //*[@id="TopBox"]/div/@class
-   comment        - //*[@id="TopBox"]/div/comment()[3]
-   text           - //*[@id="TopBox"]/div/text()[2]
-   previous level - /../div[@class="draw default"]/img[2]/@alt
+*   attributes     - //*[@id="TopBox"]/div/@class
+*   comment        - //*[@id="TopBox"]/div/comment()[3]
+*   text           - //*[@id="TopBox"]/div/text()[2]
+*   previous level - /../div[@class="draw default"]/img[2]/@alt
    
-   partial coincidence by search in value of attribute:
-   /div[@class="draw] returned nodes [[div class="draw default"],[div class="draw"], [div class="draw any"]..]  
-   like  Xpath's function contains.
+*   partial coincidence by search in value of attribute:
+*   /div[@class="draw] returned nodes [[div class="draw default"],[div class="draw"], [div class="draw any"]..]  
+*   like  Xpath's function contains.
    
    See demo project.
 
