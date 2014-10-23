@@ -65,4 +65,4 @@ This tested with version Delphi XE5,6
 
    
 [![screenshot1](/demo/Parse.png?raw=true)](/demo/Parse.png?raw=true)
-[![screenshot2](/demo/XPath.png)](/XPath.png)
+[![screenshot2](/demo/Xpath.png)](/Xpath.png)
