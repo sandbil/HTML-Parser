@@ -112,6 +112,8 @@ constructor TDomTree.Create;
 begin
   fParseErr:= TStringList.Create;
   fRootnode:= TDomTreeNode.Create(self,self,'Root','',nil,'','');
+  FCount:=0;
+
 end;
 
 destructor TDomTree.destroy;
@@ -187,7 +189,7 @@ begin
   fTypeTag:= hTypeTag;
   fText := hText;
   fOwner:=hOwner;
-
+  inc(hOwner.FCount);
 end;
 
 destructor TDomTreeNode.destroy;
@@ -547,7 +549,6 @@ var
 CountNode, nNode, i: integer;
 begin
   CountNode:=0;
-  nNode:=0;
   result:= '';
   if TObject(Node.Parent) is TDomTreeNode then
      begin
@@ -636,11 +637,17 @@ var
         // Count of Group is Six (6)
         // First not Empty - attribute, next - value
         RegExTag.RegEx :='([^\s]*?[^\S]*)=([^\S]*".*?"[^\S]*)|'+
-                         '([^\s]*?[^\S]*)=([^\S]*#39.*?#39[^\S]*)|'+
+                         '([^\s]*?[^\S]*)=([^\S]*'#39'.*?'#39'[^\S]*)|'+
                          '([^\s]*?[^\S]*)=([^\S]*[^\s]+[^\S]*)|'+
+                         '(novalidate[^\S]*)()|'+
                          '(autofocus[^\S]*)()|'+
+                         '(itemscope[^\S]*)()|'+
                          '(disabled[^\S]*)()|'+
-                         '(selected[^\S]*)()';
+                         '(selected[^\S]*)()|'+
+                         '(checked[^\S]*)()|'+
+                         '(pubdate[^\S]*)()|'+
+                         '(nowrap[^\S]*)()|'+
+                         '(async[^\S]*)()';
         if RegExTag.Match then
         begin
           MatchAttr;
@@ -680,7 +687,7 @@ var
       RegExTag.Options := [preCaseLess, preMultiLine, preSingleLine];
       // here RegExp for processing HTML tags
       // Group 1- tag, 2- attributes, 3- text
-      RegExTag.RegEx := '<([/A-Z][A-Z0-9]*)\b([^>]*)>([^<]*)';
+      RegExTag.RegEx := '<([/A-Z][:A-Z0-9]*)\b([^>]*)>([^<]*)';
       if RegExTag.Match then
          begin
           // ****************Start Check Parsing HTML Tag Error************
@@ -821,13 +828,12 @@ begin
                        '(<xmp>.*?</xmp>[^<]*)|'+
                        '(<script.*?</script>[^<]*)|'+
                        '(<textarea.*?</textarea>[^<]*)|'+
-                       '(<pre.*?</pre>[^<]*)|'+
+//                       '(<pre.*?</pre>[^<]*)|'+
                        '(<!--.+?-->[^<]*)|';
       RegEx := RegExException + '(<[^>]+>[^<]*)'; // all teg and text
       Subject := HtmlUtf8;
       if Match then
       begin
-        Owner.FCount := 1;
         MatchTag(RegExHTML.MatchedText);
         prev := MatchedOffset + MatchedLength;
         while MatchAgain do
@@ -841,7 +847,6 @@ begin
           end;
           prev := MatchedOffset + MatchedLength;
           // *****End Check Parsing HTML  Error************
-          inc(Owner.FCount);
         end;
         // ***********End RegExp match cycle************
       end

@@ -45,6 +45,15 @@ type
     Button1: TButton;
     Button2: TButton;
     IdSSLIOHandlerSocketOpenSSL1: TIdSSLIOHandlerSocketOpenSSL;
+    TabSheet2: TTabSheet;
+    Panel11: TPanel;
+    Panel12: TPanel;
+    Panel13: TPanel;
+    Button3: TButton;
+    Edit3: TEdit;
+    Memo2: TMemo;
+    IdHTTP2: TIdHTTP;
+    IdSSLIOHandlerSocketOpenSSL2: TIdSSLIOHandlerSocketOpenSSL;
     procedure ParseBtClick(Sender: TObject);
     procedure TabSheet1Show(Sender: TObject);
     procedure XPathShow(Sender: TObject);
@@ -59,6 +68,7 @@ type
     procedure FindOneBtClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
   private
     procedure DrawTree1(DTree: TDomTreeNode; prfx: string);
     procedure DrawTree(DTree: TDomTreeNode);
@@ -284,6 +294,87 @@ procedure TForm1.Button2Click(Sender: TObject);
 begin
   TreeView2.FullExpand;
   TreeView3.FullExpand;
+end;
+
+procedure TForm1.Button3Click(Sender: TObject);
+var
+  HtmlTxt,href: string;
+  HtmlTxtList: TStringList;
+  ListNode:TNodeList;
+  i: integer;
+  DomChildTree: TDomTree;
+begin
+  try
+    if not (DomTree = nil)
+    then  FreeAndNil (DomTree);
+
+
+    Memo2.Clear;
+    Memo2.Lines.Add('Start time GET- ' + DateTimeToStr(Now));
+    HtmlTxt := IdHTTP1.Get(Edit3.Text);
+    Memo2.Lines.Add('End time GET- ' + DateTimeToStr(Now));
+    DomTree := TDomTree.Create();
+
+    // parse HTML in tree's structure
+    if not DomTree.RootNode.RunParse(HtmlTxt) then
+       showmessage('Don'#39'tParse HTML!') ;
+    Memo2.Lines.Add('End match time - ' + DateTimeToStr(Now));
+    if DomTree.ParseErr.Count = 0 then
+            StatusBar1.Panels[0].Text :='Parse result: OK'
+    else StatusBar1.Panels[0].Text :='Parse result: '+IntToStr(DomTree.ParseErr.Count)+' Error';
+
+    Memo2.Lines.Add('Parsing error: - ' + IntToStr(DomTree.ParseErr.Count));
+    Memo2.Lines.AddStrings(DomTree.ParseErr);
+    // Show status Parse result
+    if DomTree.ParseErr.Count = 0 then
+            StatusBar1.Panels[0].Text :='Parse result: OK'
+    else StatusBar1.Panels[0].Text :='Parse result: Error';
+    // Show total count of parsing nodes
+    StatusBar1.Panels[1].Text :='Count node: ' + inttostr(DomTree.Count);
+
+
+    ListNode:=TNodeList.Create;
+    if DomTree.RootNode.FindNode('a',0,'href="http',true,ListNode) then
+      begin
+//    if DomTree.RootNode.FindNode('a',0,'',true,ListNode) then
+      for I := 0 to ListNode.Count-1 do
+            if ListNode[i].Attributes.TryGetValue('href',href) then
+            begin
+               Memo2.Lines.Add(href);
+            end;
+
+       Memo2.Lines.Add(' ');
+       Memo2.Lines.Add(' ');
+
+
+       for I := 0 to ListNode.Count-1 do
+         begin
+            if ListNode[i].Attributes.TryGetValue('href',href) then
+            begin
+               FreeAndNil (DomChildTree);
+               Memo2.Lines.Add(href);
+               DomChildTree := TDomTree.Create();
+               try
+                 HtmlTxt := IdHTTP2.Get(AnsiDequotedStr(href,'"'));
+                 DomChildTree.RootNode.RunParse(HtmlTxt);
+                 Memo2.Lines.Add('Parsing error: - ' + IntToStr(DomChildTree.ParseErr.Count));
+                 Memo2.Lines.AddStrings(DomChildTree.ParseErr);
+
+               except
+                  on E: Exception do
+                        Memo2.Lines.Add(E.ClassName + ' : ' + E.Message);
+               end;
+
+            end;
+         end;
+         FreeAndNil (DomChildTree);
+      end;
+
+
+  except
+    on E: Exception do
+      ShowMessage(E.ClassName + ' : ' + E.Message);
+  end;
 end;
 
 procedure TForm1.ClearBtClick(Sender: TObject);

@@ -136,10 +136,6 @@ object Form1: TForm1
       Caption = 'miniXPath'
       ImageIndex = 1
       OnShow = XPathShow
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 880
-      ExplicitHeight = 475
       object Splitter3: TSplitter
         Left = 400
         Top = 40
@@ -166,7 +162,6 @@ object Form1: TForm1
         Height = 40
         Align = alTop
         TabOrder = 0
-        ExplicitWidth = 880
         object FindOneBt: TButton
           Left = 5
           Top = 5
@@ -193,7 +188,6 @@ object Form1: TForm1
         Align = alLeft
         Caption = 'Panel6'
         TabOrder = 1
-        ExplicitHeight = 351
       end
       object Panel7: TPanel
         Left = 403
@@ -203,8 +197,6 @@ object Form1: TForm1
         Align = alClient
         Caption = 'Panel7'
         TabOrder = 2
-        ExplicitWidth = 477
-        ExplicitHeight = 351
         object Splitter2: TSplitter
           Left = 1
           Top = 225
@@ -224,7 +216,6 @@ object Form1: TForm1
           Align = alTop
           Caption = 'Panel3'
           TabOrder = 0
-          ExplicitWidth = 475
           object Panel9: TPanel
             Left = 1
             Top = 193
@@ -234,7 +225,6 @@ object Form1: TForm1
             Color = clSkyBlue
             ParentBackground = False
             TabOrder = 0
-            ExplicitWidth = 473
             object ClearBt: TButton
               Left = 4
               Top = 3
@@ -348,8 +338,63 @@ object Form1: TForm1
         Align = alBottom
         Caption = 'Panel10'
         TabOrder = 3
-        ExplicitTop = 394
-        ExplicitWidth = 880
+      end
+    end
+    object TabSheet2: TTabSheet
+      Caption = 'MultiTest parsing'
+      ImageIndex = 2
+      object Panel11: TPanel
+        Left = 0
+        Top = 0
+        Width = 990
+        Height = 644
+        Align = alClient
+        TabOrder = 0
+        object Panel12: TPanel
+          Left = 1
+          Top = 41
+          Width = 988
+          Height = 602
+          Align = alClient
+          Caption = 'Panel4'
+          TabOrder = 0
+          object Memo2: TMemo
+            Left = 1
+            Top = 1
+            Width = 986
+            Height = 600
+            Align = alClient
+            ScrollBars = ssBoth
+            TabOrder = 0
+          end
+        end
+        object Panel13: TPanel
+          Left = 1
+          Top = 1
+          Width = 988
+          Height = 40
+          Align = alTop
+          TabOrder = 1
+          object Button3: TButton
+            Left = 7
+            Top = 5
+            Width = 90
+            Height = 25
+            Caption = 'Parse all link'
+            TabOrder = 0
+            OnClick = Button3Click
+          end
+          object Edit3: TEdit
+            Left = 106
+            Top = 8
+            Width = 551
+            Height = 21
+            TabOrder = 1
+            Text = 
+              'https://www.google.ru/search?ie=UTF-8&hl=ru&q=delphi%20xpath&gws' +
+              '_rd=ssl'
+          end
+        end
       end
     end
   end
@@ -379,6 +424,34 @@ object Form1: TForm1
     SSLOptions.VerifyMode = []
     SSLOptions.VerifyDepth = 0
     Left = 824
+    Top = 144
+  end
+  object IdHTTP2: TIdHTTP
+    IOHandler = IdSSLIOHandlerSocketOpenSSL2
+    AllowCookies = True
+    ProxyParams.BasicAuthentication = False
+    ProxyParams.ProxyPort = 0
+    Request.ContentLength = -1
+    Request.ContentRangeEnd = -1
+    Request.ContentRangeStart = -1
+    Request.ContentRangeInstanceLength = -1
+    Request.Accept = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    Request.BasicAuthentication = False
+    Request.UserAgent = 'Mozilla/3.0 (compatible; Indy Library)'
+    Request.Ranges.Units = 'bytes'
+    Request.Ranges = <>
+    HTTPOptions = [hoForceEncodeParams]
+    Left = 880
+    Top = 72
+  end
+  object IdSSLIOHandlerSocketOpenSSL2: TIdSSLIOHandlerSocketOpenSSL
+    MaxLineAction = maException
+    Port = 0
+    DefaultPort = 0
+    SSLOptions.Mode = sslmUnassigned
+    SSLOptions.VerifyMode = []
+    SSLOptions.VerifyDepth = 0
+    Left = 880
     Top = 144
   end
 end
