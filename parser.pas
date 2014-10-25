@@ -1,3 +1,26 @@
+{==============================================================================|
+| Project : Delphi HTML/XHTML parser module                      | 1.1.2       |
+|==============================================================================|
+| Content:                                                                     |
+|==============================================================================|
+| The contents of this file are subject to the Mozilla Public License Ver. 1.0 |
+| (the "License"); you may not use this file except in compliance with the     |
+| License. You may obtain a copy of the License at http://www.mozilla.org/MPL/ |
+|                                                                              |
+| Software distributed under the License is distributed on an "AS IS" basis,   |
+| WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for |
+| the specific language governing rights and limitations under the License.    |
+|==============================================================================|
+| Initial Developers of the Original Code are:                                 |
+|   Sandbil (Russia) sandbil@ya.ru                                             |
+| All Rights Reserved.                                                         |
+|   Last Modified:                                                             |
+|     25.10.2014, Sandbil                                                      |
+|==============================================================================|
+| History: see README                                                          |
+|==============================================================================|}
+
+
 unit parser;
 
 interface
@@ -199,6 +222,13 @@ FreeAndNil(fChild);
   inherited;
 end;
 
+//***********FindAttr*************
+//  hNameTag - name Tag
+//  hIndex - number of a tag one after another (0 - all tag, 1 - each first ..)
+//  hAttrTxt - attribute. ex. alt=1
+//  hAnyLevel - true - all levels after start node; false - only one child level after start node
+//  dListNode - return TNodeList of TDomTreeNode
+
 function TDomTreeNode.FindNode(hNameTag: string; hIndex:integer; hAttrTxt:
     String; hAnyLevel: Boolean; dListNode: TNodeList): Boolean;
 var
@@ -284,6 +314,12 @@ begin
  end;
 end;
 
+//***********FindTagOfIndex*************
+//  hNameTag - name Tag (* - any tag, except text tag)
+//  hIndex - number of a tag one after another (0 - all tag, 1 - each first ..)
+//  hAnyLevel - true - all level after start node; false - only one child level after start node
+//  dListNode - return TNodeList of TDomTreeNode
+
 function TDomTreeNode.FindTagOfIndex(hNameTag: String; hIndex:integer;
     hAnyLevel: Boolean; dListNode: TNodeList): Boolean;
 
@@ -366,7 +402,6 @@ function TDomTreeNode.FindXPath(hXPathTxt: String; dListNode: TNodeList;
   var
   Prm: PPrmRec;
   begin
-     //showmessage(mTxtElmt);
      if (Context='/') and (trim(mTxtElmt)='') then NextAnyLevel:=true
      else if (Context='/') and (trim(mTxtElmt)='..') then
        begin
@@ -619,8 +654,9 @@ var
             result.Add(trim(RegExTag.Groups[i]), trim(RegExTag.Groups[i + 1]));
           except
             on E: Exception do
-              Owner.fParseErr.Add('Error add Attributtes to TDictionary ' +
-                E.ClassName + ' : ' + E.Message + 'Sourse string: ' + mAttrTxt);
+              Owner.fParseErr.Add('Warning: not add Attributtes ' +
+                E.ClassName + ' : ' + E.Message + 'Sourse string: ' + mAttrTxt +
+                '; attributtes: ' + RegExTag.Groups[i]);
           end;
           break;
         end;
@@ -655,8 +691,9 @@ var
             MatchAttr;
           // ***Start Check Parsing Tag Attributes Error****
           if CheckAttr <> mAttrTxt then
-            Owner.fParseErr.Add('Error parsing attributtes - ' +
-              'Sourse string: ' + mAttrTxt);
+            Owner.fParseErr.Add('Warning: parsed not all attributes, ' +
+              'sourse string: ' + mAttrTxt +
+              '');
           // ***End Check Parsing Tag Attributes Error************
         end
         else
@@ -864,28 +901,5 @@ begin
   end;
 
 end;
-
-//***********FindAttr*************
-//  hNameTag - name Tag
-//  hIndex - number of a tag one after another (0 - all tag, 1 - each first ..)
-//  hAttrTxt - attribute. ex. alt=1
-//  hAnyLevel - true - all levels after start node; false - only one child level after start node
-//  dListNode - return TChildList of TDomTreeNode
-
-
-//***********FindTagOfIndex*************
-//  hNameTag - name Tag (* - any tag, except text tag)
-//  hIndex - number of a tag one after another (0 - all tag, 1 - each first ..)
-//  hAnyLevel - true - all level after start node; false - only one child level after start node
-//  dListNode - return TChildList of TDomTreeNode
-
-//***********FindXPath*************
-//
-// ***********************RunParse**********************************
-
-
-
-
-
 
 end.
