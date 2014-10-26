@@ -646,7 +646,7 @@ var
     var
       i: integer;
     begin
-      CheckAttr := CheckAttr + RegExTag.MatchedText;
+      CheckAttr := StuffString(CheckAttr,RegExTag.MatchedOffset+1, RegExTag.MatchedLength, StringOfChar(' ',RegExTag.MatchedLength));
       for i := 1 to RegExTag.GroupCount do
         if trim(RegExTag.Groups[i]) <> '' then
         begin
@@ -656,7 +656,7 @@ var
             on E: Exception do
               Owner.fParseErr.Add('Warning: not add Attributtes ' +
                 E.ClassName + ' : ' + E.Message + 'Sourse string: ' + mAttrTxt +
-                '; attributtes: ' + RegExTag.Groups[i]);
+                ';' + chr(13)+chr(10)+' attributtes: ' + RegExTag.Groups[i]);
           end;
           break;
         end;
@@ -668,21 +668,26 @@ var
       if trim(mAttrTxt) <> '' then
       begin
         RegExTag.Subject := mAttrTxt;
+        CheckAttr :=   mAttrTxt;
         RegExTag.Options := [preCaseLess, preMultiLine, preSingleLine];
+        RegExTag.Replacement:='';
         // here RegExp for processing attributes of tags
-        // Count of Group is Six (6)
         // First not Empty - attribute, next - value
         RegExTag.RegEx :='([^\s]*?[^\S]*)=([^\S]*".*?"[^\S]*)|'+
                          '([^\s]*?[^\S]*)=([^\S]*'#39'.*?'#39'[^\S]*)|'+
                          '([^\s]*?[^\S]*)=([^\S]*[^\s]+[^\S]*)|'+
+                         '(allowTransparency[^\S]*)()|'+
+                         '(allowfullscreen[^\S]*)()|'+
                          '(novalidate[^\S]*)()|'+
                          '(autofocus[^\S]*)()|'+
                          '(itemscope[^\S]*)()|'+
                          '(disabled[^\S]*)()|'+
+                         '(readonly[^\S]*)()|'+
                          '(selected[^\S]*)()|'+
                          '(checked[^\S]*)()|'+
                          '(pubdate[^\S]*)()|'+
                          '(nowrap[^\S]*)()|'+
+                         '(hidden[^\S]*)()|'+
                          '(async[^\S]*)()';
         if RegExTag.Match then
         begin
@@ -690,10 +695,10 @@ var
           while RegExTag.MatchAgain do
             MatchAttr;
           // ***Start Check Parsing Tag Attributes Error****
-          if CheckAttr <> mAttrTxt then
+          if Length(Trim(CheckAttr)) > 0 then
             Owner.fParseErr.Add('Warning: parsed not all attributes, ' +
-              'sourse string: ' + mAttrTxt +
-              '');
+              'sourse string: ' + mAttrTxt + chr(13)+chr(10)+
+              'not parsed string: ' + Trim(CheckAttr));
           // ***End Check Parsing Tag Attributes Error************
         end
         else

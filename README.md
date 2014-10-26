@@ -52,12 +52,12 @@ This tested with version Delphi XE5,6
    And joy!!!
 
  Available properties and methods:
-*  TDomTree
+  TDomTree
 *  property Count - count of nodes
 *  property RootNode - root node (TDomTreeNode)
 *  property ParseErr - Tstringlist contains all parsing errors and warnings
 
-*  TDomTreeNode
+  TDomTreeNode
 *   property Tag - name of tag
 *   property AttributesTxt - string with all attributtes
 *   property Attributes - parsed attributes (TDictionary<string, string>)
@@ -74,8 +74,8 @@ This tested with version Delphi XE5,6
 *   function GetText - returns the set index text in the current container node
 *   function GetXPath - returns Xpath for current node
 *   function RunParse - if parse is successfully then CHild property contains HTML DOM tree
-*   function FindXPath - boolean function, if true then  TNodeList contains founded nodes
-*                        and TStringList  contains founded value of attribute, comment, text
+*   function FindXPath - boolean function, if true then  TNodeList contains found nodes
+*   and TStringList  contains found values of attribute, comment, text
 
    Xpath  support:
 *   attributes     - //*[@id="TopBox"]/div/@class
@@ -84,11 +84,12 @@ This tested with version Delphi XE5,6
 *   previous level - /../div[@class="draw default"]/img[2]/@alt
    
 *   partial coincidence by search in value of attribute:
-*   /div[@class="draw] returned nodes [[div class="draw default"],[div class="draw"], [div class="draw any"]..]  
-*   like  Xpath's function contains.
-   
+    /div[@class="draw] returned nodes [[div class="draw default"],[div class="draw"], [div class="draw any"]..]
+    like  Xpath's function contains.
+Note: Xpath always starts search from current node. If you want to do global search, you must start from root's node.
+
    See demo project.
 
    
-[![screenshot1](/demo/Parse.png?raw=true)](/demo/Parse.png?raw=true)
+[![screenshot1](/demo/Parse.png)](/demo/Parse.png)
 [![screenshot2](/demo/Xpath.png)](/Xpath.png)

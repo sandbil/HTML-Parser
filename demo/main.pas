@@ -225,7 +225,7 @@ begin
             StatusBar1.Panels[0].Text :='Parse result: OK'
     else StatusBar1.Panels[0].Text :='Parse result: '+IntToStr(DomTree.ParseErr.Count)+' Error';
 
-    Memo1.Lines.Add('Parsing error: - ' + IntToStr(DomTree.ParseErr.Count));
+    Memo1.Lines.Add('Parsing error and warning: ' + IntToStr(DomTree.ParseErr.Count));
     Memo1.Lines.AddStrings(DomTree.ParseErr);
     // Show status Parse result
     if DomTree.ParseErr.Count = 0 then
@@ -357,12 +357,13 @@ begin
                try
                  HtmlTxt := IdHTTP2.Get(AnsiDequotedStr(href,'"'));
                  DomChildTree.RootNode.RunParse(HtmlTxt);
-                 Memo2.Lines.Add('Parsing error: - ' + IntToStr(DomChildTree.ParseErr.Count));
+                 Memo2.Lines.Add('Parsing error and warning: ' + IntToStr(DomChildTree.ParseErr.Count));
                  Memo2.Lines.AddStrings(DomChildTree.ParseErr);
-
+                 Memo2.Lines.Add('');
                except
                   on E: Exception do
-                        Memo2.Lines.Add(E.ClassName + ' : ' + E.Message);
+                       // Memo2.Lines.Add(E.ClassName + ' : ' + E.Message);
+                       Memo2.Lines.Add(E.Message);
                end;
 
             end;
